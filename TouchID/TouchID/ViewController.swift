@@ -7,12 +7,25 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        let context = LAContext()
+        
+        var error: NSError?
+        guard context.canEvaluatePolicy(LAPolicy.DeviceOwnerAuthenticationWithBiometrics, error: &error) else {
+            print("Can't evaluate policy : \(error?.localizedDescription)")
+            return
+        }
+        
+        context.evaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, localizedReason: "Need authentication with biometrics") { (success, authenticationError) -> Void in
+            print("Authentication \(success ? "succeeded" : "failed")")
+        }
     }
 
     override func didReceiveMemoryWarning() {
